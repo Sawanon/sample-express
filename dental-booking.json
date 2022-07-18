@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "dental-booking-63ebe",
+  "private_key_id": "788ae8281a30a4b27a85d70d2495e2c4a7302c00",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCYg7qReD36wSnQ\nN4lu0MHiASJOKnvookP/10UGLyaaAjsrEpfolNA34MTXC+ufr1E9UbWSceBhoRQS\nnEgJ0S+XjrJEEqSXPFKMDx1naJD3y+leiA+O8y/bthfqacFUiQXHIAEOmCHsU8bJ\n759JuefMz7H1T4W/uMWAvCCq8tAAhSHGe9kzZlA++aHyk4x0eKeABnNjlQjY1rn4\nUN3NaEi2hCV6l2PrvMlwIpc05HeHPpD7tGmoCDQFU6/VJIMf6ea/RedaaT7eNomv\nMZm+29RUgPMyzFSLRIXVPMhPwKwveOquNOfhglQ26v+e497sgrT6Rt8wkt6D6Pv7\nSBdgvp/BAgMBAAECggEAJ8ujiGasIXx6mRqMsU4mcP7jwSqjt1Fz1dOJbrIp6+Cu\nKLCK08TUyefL5OL24e1gkNP7wVEWf9MEhlCiGXGsbertiAanTNEQJvygqwVlYksi\nQyjUinPZJobOmbtrl0/DorAupmy62UwI4FM2qImqOs5s/Hn6B8tCObOdAI4oCSJM\ntL++NcU7baW8b3DjgRc/QJVNx12LwYdHoboIwEHlOLmzMts9mAYf4+Mu4zKZ5rxQ\nJzlCVJgD510vakNrK42Ty4Yc2YYSC0rinleUEY5zOD8JLk0QoCHSj1wfV0BLB1Do\nyddX3UqF2QpnK2JK+uGQhtiMxj/izBIOT5NdJWINGwKBgQDOdDR/rlsDNoN4CFxT\nYy2O8T7jkqdeExYDTmUZPpHapY9rPI6PnyLcDHodoqnFodzSgIzzm9S6p41h1H8Y\noL8arYbq2chybfQaCky5ibAFno59d2J5FjTW7QkggUP05Af2teZd9/adCoggXw9h\n68PjzGFXukIjnjC2ea2T7nF/EwKBgQC9Ha5mBQx7B/rlmF48hL2fCebxD5EcentB\nnkGwt8ln9N9w22GHeZ0f77gm9ZKPzbXk14t4NKF39BNJECaBjxeGbvALxSftXDze\nVM6vA2EqQFYgO0V3KwqRZ8DxQL0ZYtc8dcGRTjzjIBOtCNoiVwxydLZqbiOfsH66\nNJf3Fqo8WwKBgB9ICDRYbL3d4qmrSqHv4xVHhGni7K0aYzl5BWR/0IW6lDKBaHBm\nglepJE+dN/AUCGt0wuaec+scPBXYprFKmeom5Mxs1yxPcK8JZHqwXBVd4uUr06XZ\nMYRnQfzE2VEfw/0jrpYKXjmJQPr2rFP/7xxy+UTbme3fqC3d3ekONfA1AoGAIaNK\n5viU7LlRpk8AzBDsTYKMYmpbbE5Y6CYHFzDJkUUcDU3oPhmimhCgl8VsaUm0xdyV\nAS+TXOu8Fm3Z+4eBLrdC2UUbQfv7E6zQCo82VDaXWypPw8+TFKP4zLCwMfjDwgxL\n/tWEvP1yon+FlUAYha8+1xV6HqhdEi/Sq++LHisCgYAevRiFNOHD7KELB7bFzF3e\neq3/3z/2tFz8JFtH4Ot8UXAGs6N/aEvau0uGlT7OM71QZ8QpaJk0/f4neY3CTKnO\nCB2X3jF3DQNkrz07kvunbQ/lCdXXgmHSLZWsVoKsZT6+I1lsIm5sGm9Z+x2PlfJ1\n9StlJjTiO3N2uW2rioIkZA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-5esy1@dental-booking-63ebe.iam.gserviceaccount.com",
+  "client_id": "118002686694368146059",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-5esy1%40dental-booking-63ebe.iam.gserviceaccount.com"
+}
