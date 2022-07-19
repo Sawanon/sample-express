@@ -1,12 +1,14 @@
-[
-    {
-        "name": "non",
-        "team": "nonteam",
-        "point": 25
-    },
-    {
-        "name": "non2",
-        "team": "nonteam2",
-        "point": 256
-    }
-]
+{
+    "test": [
+        {
+            "name": "non",
+            "team": "nonteam",
+            "point": 25
+        },
+        {
+            "name": "non2",
+            "team": "nonteam2",
+            "point": 256
+        }
+    ]
+}
