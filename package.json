@@ -1,21 +1,30 @@
 {
   "type": "module",
   "name": "sample-express",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "start": "node --experimental-json-modules index.js"
+    "start": "node --experimental-json-modules index.js",
+    "dev": "nodemon --experimental-json-modules index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/dialogflow": "^5.1.0",
     "@line/bot-sdk": "^7.5.0",
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "firebase-admin": "^10.3.0"
+    "firebase-admin": "^10.3.0",
+    "uuid": "^8.3.2"
   },
   "engines": {
     "node": "16.13.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
   }
 }

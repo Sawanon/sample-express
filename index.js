@@ -4,8 +4,21 @@ import { initializeApp, applicationDefault, cert } from 'firebase-admin/app'
 import {getFirestore, Timestamp, FieldValue} from 'firebase-admin/firestore'
 import serviceAccount from './dental-booking.json';
 import UserCard from './Components/userCard.js';
-import { accessToken, sercret, timeoutKeepLocalData } from './config.js'
-import { flex2 } from './Components/FlexMessage.js';
+import API, { accessToken, sercret, timeoutKeepLocalData } from './config.js'
+import { flexUser } from './Components/FlexMessage.js';
+import { runSample } from './Controllers/Dialogflow.js'
+import dotenv from 'dotenv'
+import path, {dirname} from 'path';
+import { fileURLToPath } from 'url'
+import axios from 'axios'
+import User from './Models/User.js';
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({
+  path: __dirname+'/.env'
+})
 
 let port = process.env.PORT || 3000;
 const app = express();
@@ -15,7 +28,7 @@ const config = {
 };
 const client = new line.Client(config);
 let allUser = {};
-let userCard = new UserCard();
+const empty = "-";
 
 initializeApp({
   credential: cert(serviceAccount),
@@ -48,22 +61,30 @@ app.post("/", line.middleware(config), (req, res) => {
 });
 
 const handleEvent = async (event) => {
-  if (event.type !== "message" || event.message.type !== "text") {
-    return Promise.resolve(null);
+  let message
+  if(event.type !== "postback"){
+    if (event.type !== "message" || event.message.type !== "text") {
+      return Promise.resolve(null);
+    }
+    message = event.message.text;
+  }else{
+    message = event.postback.data;
   }
-  const message = event.message.text;
+
   const userId = event.source.userId;
-  if (message === "add doc") {
-    addDoc();
-  } else if (message === "ลงทะเบียน") {
-    console.log(allUser);
+  // const postbackMessage =
+  if (message === "ลงทะเบียน") {
     if (await checkUser(userId)) {
       // userCard.setNickName("test na");
       // replyMessage(event, userCard.getNickName());
-      replyMessage(event, "yes");
+      replyMessage(event, "คุณเคยลงทะเบียนไว้แล้ว");
     } else {
-      replyMessage(event, "no");
-      registerUser(userId);
+      if(await registerUser(userId)){        
+        replyMessage(event, "ลงทะเบียนสำเร็จ");
+        // client.pushMessage(userId, allUser[userId].data.userCard.flexMessage)
+      }else{
+        replyMessage(event, "เกิดข้อผิดพลาด ขออภัย");
+      }
     }
   } else if (message === "เช็คตารางจอง") {
     sendFlexMessage(event);
@@ -71,15 +92,14 @@ const handleEvent = async (event) => {
   } else if (message == "แก้ไขชื่อเล่น") {
     allUser[userId] = {...allUser[userId], function: editName}
     replyMessage(event, "กรุณาพิมพ์ชื่อเล่น")
+  }else if(message === "เช็คข้อมูลส่วนตัว"){
+    checkMyProfile(userId);
+  }else if(message === "แก้ไขข้อมูลส่วนตัว") {
+    sendFlexMessage(event)
   }else {
-    if(allUser[userId].function){
-      await allUser[userId].function(userId,message)
-      console.log("71 if");
-      return
-    }else{
-      console.log("73 else");
-    }
-    replyMessage(event, "else");
+    console.log("73 else");
+    const response = await runSample(message)
+    replyMessage(event, response.fulfillmentText);
   }
 
   // sendFlexMessage(event)
@@ -87,67 +107,66 @@ const handleEvent = async (event) => {
 };
 
 const checkUser = async (userId) => {
-  if(allUser[userId]){
-    clearTimeout(allUser[userId].timer)
-    allUser[userId].timer = setTimeout(() => {
-      delete allUser[userId]
-      console.log("clear!", allUser);
-    }, timeoutKeepLocalData);
+  const fireStoreProfile = await getFirestoreProfile(userId)
+  if(fireStoreProfile.exists){
+    const user = new User()
+    user.convertFromFirestore(fireStoreProfile.data())
+    // console.log("new log!!",allUser);
     return true
   }else{
-    allUser[userId] = {
-      name: "test",
-      userObject: new UserCard(),
-      timer: setTimeout(()=> {
-        delete allUser[userId]
-        console.log("clear!", allUser);
-        // client.pushMessage(userId, {type: 'text', text: `close id: ${allUser}`})
-      }, [timeoutKeepLocalData])
-    }
-    const ref = db.collection("Users").doc(userId);
-    const data = await ref
-      .get()
-      .then((docs) => {
-        console.log("already exists in firebase");
-        return docs.exists;
-      })
-      .catch((e) => {
-        console.log("don't exists in firebase");
-        console.log("checkUser", e);
-        return false;
-      });
-    return data;
+    return false
   }
 };
 
 const registerUser = async (userId) => {
+  const lineProfile = await getLineProfile(userId)
+  const user = new User(empty, empty, empty, empty, lineProfile.displayName, lineProfile.pictureUrl);
+  const data = user.convertToFirestore()
   const ref = db.collection("Users").doc(userId);
-  ref
-    .set({})
+  return await ref
+    .set(data)
     .then(() => {
       console.log("add success");
+      return true
     })
     .catch((e) => {
       console.log("register", e);
+      return false
     });
 };
 
-const editName = async (userId, text) => {
+const editName = async (userId, name) => {
   const ref = db.collection("Users").doc(userId);
   await ref
     .set(
       {
-        name: text,
+        name
       },
       { merge: true }
     )
     .then(() => {
       console.log("editName success");
+      client.pushMessage(userId, {type: "text", name: `แก้ไขชื่อเล่นของคุณเรียบร้อย \n ชื่อเล่นของคุณ: ${text}`})
     })
     .catch((e) => {
       console.log("editName", e);
     });
 };
+
+const editFirstName = async (userId, fname) => {
+  const ref = db.collection("Users").doc(userId)
+  await ref.set(
+    {
+      fname
+    },{ merge: true }
+  )
+  .then(()=>{
+    console.log("");
+  })
+  .catch((e)=>{
+    console.error("editFirstName", e);
+  })
+}
 
 const replyMessage = (event, newMessage) => {
   const message = {
@@ -158,13 +177,44 @@ const replyMessage = (event, newMessage) => {
 };
 
 const sendFlexMessage = (event) => {
-  const flex = flex2;
+  const flex = flexUser;
   client.pushMessage(event.source.userId,flex)
 };
 
-// app.get("/player", (req, res) => {
-//   res.send(importData);
-// });
+const checkMyProfile = async (userId) => {
+  const fireStoreProfile = await getFirestoreProfile(userId);
+  const user = new User()
+  user.convertFromFirestore(fireStoreProfile.data())
+  const flex = user.userCard.flexMessage  
+  client.pushMessage(userId, flex)
+}
+
+const getLineProfile = async (userId) => {
+  return await axios.get(`${API.getLineProfile}/${userId}`,{
+    headers: {
+      "Authorization": `Bearer ${accessToken}`
+    }
+  }).then((response)=>{
+    console.log("getLineProfile !!",response.data);
+    return response.data;
+  })
+  .catch((e)=>{
+    console.error("error getLineProfile", e);
+    return false
+  })
+}
+
+const getFirestoreProfile = async (userId) => {
+  const ref = db.collection("Users").doc(userId)
+  return await ref.get()
+  .then((snapShotData)=>{
+    return snapShotData
+  })
+  .catch((e)=>{
+    console.error(e);
+    return false
+  })
+}
 
 app.listen(port, () => {
   console.log(`example app listening on port http://localhost:${port}`);

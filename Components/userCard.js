@@ -1,46 +1,28 @@
+import { flexUser } from './FlexMessage.js'
 export default class UserCard{
-    constructor(name, fname, lname, tel){
-        this.name = name
-        this.fname = fname
-        this.lname = lname
-        this.tel = tel
+    constructor(name, fname, lname, tel, lineName, pictureUrl){
+        this.flexMessage = flexUser
+        this.setPicture(pictureUrl)
+        this.setLineName(lineName)
+        this.setName(name)
+        this.setFullName(fname, lname)
     }
 
-    getNickName = () => {
-        return this.name
+    setPicture = (pictureUrl) => {
+        this.flexMessage.contents.body.contents[0].contents[0].url = pictureUrl
     }
 
-    getFullName = () => {
-        return `${this.fname} ${this.lname}`
+    setLineName = (lineName) => {
+        this.flexMessage.contents.body.contents[1].text = lineName
     }
 
-    setNickName = (nickName) => {
-        this.name = nickName
+    setName = (name) => {
+        this.flexMessage.contents.body.contents[2].contents[0].contents[1].text = `${name}`
     }
 
-    setFullName = (fullName) => {
-        let keepBeforeLastIndex
-        let keepLastIndex = fullName;
-        while(keepLastIndex.search(" ") !== -1){
-            keepLastIndex.replace(" ", "");
-        }
-        const arrayFullName = fullName.split(" ")
-        
+    setFullName = (fname, lname) => {
+        const fullName = fname === "-" && lname === "-" ? '-' : `${fname} ${lname}`
+        this.flexMessage.contents.body.contents[2].contents[1].contents[1].text = fullName
     }
-
-    convertFromFirebase = (data) => {
-        this.name = data.name;
-        this.fname = data.fname;
-        this.lname = data.lname;
-        this.tel = data.tel;
-    }
-
-    getUser = () => {
-        return {
-            name: this.name,
-            fname: this.fname,
-            lname: this.lname,
-            tel: this.tel
-        }
-    }
+    
 }
